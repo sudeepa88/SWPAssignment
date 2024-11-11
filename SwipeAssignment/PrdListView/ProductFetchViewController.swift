@@ -1,3 +1,4 @@
+
 //
 //  ProductFetchViewController.swift
 //  SwipeAssignment
@@ -7,7 +8,7 @@
 
 import UIKit
 
-class ProductFetchViewController: UIViewController, UITableViewDataSource {
+class ProductFetchViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -17,10 +18,25 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource {
     
     // Data source for the table view
     var products: [ProductListModel] = []
+    var filteredProducts: [ProductListModel] = [] // For search results
     
     // API URL
     let productURL = "https://app.getswipe.in/api/public/get"
     
+    let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "Search Products"
+        //searchBar.layer.borderWidth = 1
+        //searchBar.layer.borderColor = UIColor.systemOrange.cgColor
+        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+                textField.layer.borderWidth = 1
+                textField.layer.borderColor = UIColor.systemOrange.cgColor
+                textField.layer.cornerRadius = 10
+                textField.clipsToBounds = true
+            }
+        return searchBar
+    }()
     
     let addProductsBtn: UIButton = {
         let button = UIButton()
@@ -33,36 +49,40 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource {
         return button
     }()
     
-    
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Setup view and table view
         view.backgroundColor = .white
         title = "All Products"
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(ProductListTableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        searchBar.delegate = self // Set the search bar delegate
+        
+        view.addSubview(searchBar)
         view.addSubview(tableView)
         view.addSubview(addProductsBtn)
         
-        setupContraintsOfTableView()
+        setupContraints()
         
         // Fetch data from the API
         fetchProducts()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         fetchProducts()
-        tableView.reloadData()
     }
     
-    
-    
-    func setupContraintsOfTableView() {
+    func setupContraints() {
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -73,7 +93,6 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource {
             addProductsBtn.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
-    
     
     @objc func addProductVC() {
         navigationController?.pushViewController(ProductAddViewController(), animated: true)
@@ -101,6 +120,7 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource {
                 DispatchQueue.main.async {
                     // Update the data source and reload the table view
                     self.products = products
+                    self.filteredProducts = products // Initialize filtered products with full list
                     self.tableView.reloadData()
                 }
             } catch {
@@ -111,17 +131,31 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource {
         task.resume()
     }
     
+    // MARK: - UISearchBarDelegate
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Filter products based on search text
+        if searchText.isEmpty {
+            filteredProducts = products // Show all products if search text is empty
+        } else {
+            filteredProducts = products.filter { product in
+                product.product_name.lowercased().contains(searchText.lowercased())
+            }
+        }
+        tableView.reloadData()
+    }
+    
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        return filteredProducts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ProductListTableViewCell
         
-        // Configure cell with product data
-        let product = products[indexPath.row]
+        // Configure cell with filtered product data
+        let product = filteredProducts[indexPath.row]
         cell.nameLabel.text = product.product_name
         cell.priceLabel.text = "\(product.price)"
         cell.taxLabel.text = "\(product.tax)"
