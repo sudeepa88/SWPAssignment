@@ -8,6 +8,7 @@ target 'SwipeAssignment' do
   # Pods for SwipeAssignment
 
    pod 'Alamofire', '~> 5.4'
+   pod 'RealmSwift', '~>10'
 
 
 end

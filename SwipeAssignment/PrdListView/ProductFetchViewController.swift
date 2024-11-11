@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ProductFetchViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
+    
+    let realm = try! Realm()
+    private var favs: [Favourites] = []
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -159,6 +163,8 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
         cell.nameLabel.text = product.product_name
         cell.priceLabel.text = "\(product.price)"
         cell.taxLabel.text = "\(product.tax)"
+        cell.favButton.tag = indexPath.row
+        cell.favButton.addTarget(self, action: #selector(addedToFavourite), for: .touchUpInside)
         
         // Load image from URL
         if let imageURL = URL(string: product.image) {
@@ -185,6 +191,13 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
                 completion(nil)
             }
         }.resume()
+    }
+    
+    @objc func addedToFavourite(_ sender: UIButton) {
+        print("Sender ->", sender.tag)
+        AlertView.showAlert("Alert", message: "Product have been added to favourites", okTitle: "Okay")
+        sender.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        
     }
 }
 
