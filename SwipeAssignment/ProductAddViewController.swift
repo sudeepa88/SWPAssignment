@@ -12,31 +12,84 @@ class ProductAddViewController: UIViewController, UIImagePickerControllerDelegat
     
     let productTitle: UITextField = {
         let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints =  false
-        textField.placeholder = "Product Name"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.borderColor = UIColor.systemOrange.cgColor
+        textField.layer.borderWidth = 2
+        textField.layer.cornerRadius = 10
+
+        // Set placeholder with color
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Product Name",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemOrange]
+        )
+
+        // Add left padding
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
+
         return textField
     }()
-    
+
     let productType: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Product Type"
-        textField.translatesAutoresizingMaskIntoConstraints =  false
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.borderColor = UIColor.systemOrange.cgColor
+        textField.layer.borderWidth = 2
+        textField.layer.cornerRadius = 10
+
+        // Set placeholder with color
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Product Type",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemOrange]
+        )
+
+        // Add left padding
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
+
         return textField
     }()
-    
+
     let productPrice: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Rate"
-        textField.translatesAutoresizingMaskIntoConstraints =  false
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.borderColor = UIColor.systemOrange.cgColor
+        textField.layer.borderWidth = 2
+        textField.layer.cornerRadius = 10
+
+        // Set placeholder with color
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Rate",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemOrange]
+        )
+
+        // Add left padding
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
+
         return textField
     }()
-    
+
     let productTax: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Tax"
-        textField.translatesAutoresizingMaskIntoConstraints =  false
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.layer.borderColor = UIColor.systemOrange.cgColor
+        textField.layer.borderWidth = 2
+        textField.layer.cornerRadius = 10
+
+        // Set placeholder with color
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "Tax",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemOrange]
+        )
+
+        // Add left padding
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
+
         return textField
     }()
+
     
     let addButton: UIButton = {
         let button = UIButton()
@@ -52,6 +105,10 @@ class ProductAddViewController: UIViewController, UIImagePickerControllerDelegat
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderColor = UIColor.systemOrange.cgColor
+        imageView.layer.borderWidth = 2
+        imageView.layer.cornerRadius = 10  // Optional, adds rounded corners
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -136,21 +193,21 @@ class ProductAddViewController: UIViewController, UIImagePickerControllerDelegat
     
     
     @objc func dataSubmitting() {
-        if productTitle.text == nil {
+        
+        if productTitle.text?.isEmpty ?? true {
             AlertView.showAlert("Alert", message: "Please add a name", okTitle: "Okay")
-        } else if productType.text == nil {
+            print("Product title is empty")
+        } else if productType.text?.isEmpty ?? true {
             AlertView.showAlert("Alert", message: "Please add a type of product", okTitle: "Okay")
-        } else if productPrice.text == nil {
+        } else if productPrice.text?.isEmpty ?? true {
             AlertView.showAlert("Alert", message: "Please add a product price", okTitle: "Okay")
-        } else if productTax.text == nil {
+        } else if productTax.text?.isEmpty ?? true {
             AlertView.showAlert("Alert", message: "Please add tax on this product", okTitle: "Okay")
         } else {
-            
-            var nameOfProduct = productTitle.text!
-            var typeOfProduct = productType.text!
-            var priceOfProduct = productPrice.text!
-            var taxOfProduct = productTax.text!
-            
+            let nameOfProduct = productTitle.text!
+            let typeOfProduct = productType.text!
+            let priceOfProduct = productPrice.text!
+            let taxOfProduct = productTax.text!
             
             uploadImageAndData(image: imageView.image!, textField1: nameOfProduct, textField2: typeOfProduct, textField3: priceOfProduct, textField4: taxOfProduct) { result in
                 switch result {
@@ -160,9 +217,9 @@ class ProductAddViewController: UIViewController, UIImagePickerControllerDelegat
                     print("Upload failed with error: \(error)")
                 }
             }
-            
-        } // else
+        }
     }
+
     
     @objc func openImagePicker() {
         let imagePickerController = UIImagePickerController()
