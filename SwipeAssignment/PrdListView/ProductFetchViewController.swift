@@ -34,11 +34,11 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
         //searchBar.layer.borderWidth = 1
         //searchBar.layer.borderColor = UIColor.systemOrange.cgColor
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-                textField.layer.borderWidth = 1
-                textField.layer.borderColor = UIColor.systemOrange.cgColor
-                textField.layer.cornerRadius = 10
-                textField.clipsToBounds = true
-            }
+            textField.layer.borderWidth = 1
+            textField.layer.borderColor = UIColor.systemOrange.cgColor
+            textField.layer.cornerRadius = 10
+            textField.clipsToBounds = true
+        }
         return searchBar
     }()
     
@@ -77,6 +77,7 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
         fetchProducts()
     }
     
@@ -178,6 +179,14 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
             cell.apiImageView.layer.cornerRadius = 40
         }
         
+        if let fav = favs.first(where: { ($0.title == products[indexPath.row].product_name) && ($0.price == products[indexPath.row].price) && ($0.productType == products[indexPath.row].product_type) && ($0.productTax == products[indexPath.row].tax)}), fav.fav {
+            cell.favButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+            print("true")
+        } else {
+            cell.favButton.setBackgroundImage(UIImage(systemName: "heart"), for: .normal)
+            print("false")
+        }
+        
         cell.setupUI()
         return cell
     }
@@ -197,6 +206,33 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
         print("Sender ->", sender.tag)
         AlertView.showAlert("Alert", message: "Product have been added to favourites", okTitle: "Okay")
         sender.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
+        
+        let rowIndex = sender.tag
+        let productTitle = products[rowIndex].product_name
+        let productPrice = products[rowIndex].price
+        let productType = products[rowIndex].product_type
+        let productTax = products[rowIndex].tax
+        let productImg = products[rowIndex].image
+        
+        if let fav = favs.first(where: { ($0.title == productTitle) && ($0.price == productPrice) && ($0.productType == productType) && ($0.productTax == productTax) }) {
+            try! realm.write {
+                fav.fav.toggle()
+            }
+        } else {
+            let newFav = Favourites()
+            newFav.title = productTitle
+            newFav.price = productPrice
+            newFav.productType = productType
+            newFav.productTax = productTax
+            newFav.productImage = productImg
+            newFav.fav = true
+            favs.append(newFav)
+            try! realm.write {
+                realm.add(newFav)
+            }
+        }
+        
+        tableView.reloadRows(at: [IndexPath(row: rowIndex, section: 0)], with: .none)
         
     }
 }
