@@ -18,3 +18,9 @@ class Favourites:Object {
    
     @objc dynamic var fav: Bool = false
 }
+
+extension Favourites {
+    var uniqueKey: String {
+        return "\(title)-\(price)-\(productType)-\(productTax)"
+    }
+}

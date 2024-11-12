@@ -14,3 +14,9 @@ struct ProductListModel: Decodable {
     let product_type: String
     let tax: Double
 }
+
+extension ProductListModel {
+    var uniqueKey: String {
+        return "\(product_name)-\(price)-\(product_type)-\(tax)"
+    }
+}

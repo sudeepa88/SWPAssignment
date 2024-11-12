@@ -213,6 +213,7 @@ class ProductAddViewController: UIViewController, UIImagePickerControllerDelegat
                 switch result {
                 case .success(let data):
                     print("Upload successful with response data: \(String(data: data ?? Data(), encoding: .utf8) ?? "")")
+                    self.navigationController?.popViewController(animated: true)
                 case .failure(let error):
                     print("Upload failed with error: \(error)")
                 }

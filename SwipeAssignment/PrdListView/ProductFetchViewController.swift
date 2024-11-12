@@ -14,6 +14,8 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
     let realm = try! Realm()
     private var favs: [Favourites] = []
     
+    private let loadingView = LoadingView()
+    
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -77,6 +79,7 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        favs = Array(realm.objects(Favourites.self))
         tableView.reloadData()
         fetchProducts()
     }
@@ -105,16 +108,25 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
     
     // Fetch products from the API
     func fetchProducts() {
+        
+        loadingView.show(on: view)
+        
         guard let url = URL(string: productURL) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self else { return }
             if let error = error {
+                DispatchQueue.main.async {
+                    self.loadingView.hide()
+                }
                 print("Error fetching data: \(error)")
                 return
             }
             
             guard let data = data else {
+                DispatchQueue.main.async {
+                    self.loadingView.hide()
+                }
                 print("No data found")
                 return
             }
@@ -127,6 +139,7 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
                     self.products = products
                     self.filteredProducts = products // Initialize filtered products with full list
                     self.tableView.reloadData()
+                    self.loadingView.hide()
                 }
             } catch {
                 print("Error decoding JSON: \(error)")
@@ -179,7 +192,7 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
             cell.apiImageView.layer.cornerRadius = 40
         }
         
-        if let fav = favs.first(where: { ($0.title == products[indexPath.row].product_name) && ($0.price == products[indexPath.row].price) && ($0.productType == products[indexPath.row].product_type) && ($0.productTax == products[indexPath.row].tax)}), fav.fav {
+        if let fav = favs.first(where: { $0.uniqueKey == product.uniqueKey }), fav.fav {
             cell.favButton.setBackgroundImage(UIImage(systemName: "heart.fill"), for: .normal)
             print("true")
         } else {
@@ -214,7 +227,9 @@ class ProductFetchViewController: UIViewController, UITableViewDataSource, UISea
         let productTax = products[rowIndex].tax
         let productImg = products[rowIndex].image
         
-        if let fav = favs.first(where: { ($0.title == productTitle) && ($0.price == productPrice) && ($0.productType == productType) && ($0.productTax == productTax) }) {
+        let product = products[rowIndex]
+        
+        if let fav = favs.first(where: { $0.uniqueKey == product.uniqueKey }) {
             try! realm.write {
                 fav.fav.toggle()
             }

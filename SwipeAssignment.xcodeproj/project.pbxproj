@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0595E404E73AE014412902D0 /* Pods_SwipeAssignment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A2B93503A76089E3003ECC6 /* Pods_SwipeAssignment.framework */; };
+		AB341EEB2CE3207800745002 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB341EEA2CE3207800745002 /* LoadingView.swift */; };
 		D91D19582CE266740082B12C /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91D19572CE266740082B12C /* AlertView.swift */; };
 		D91D195B2CE276B90082B12C /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D91D195A2CE276B90082B12C /* IQKeyboardManagerSwift */; };
 		D91D19602CE27DD60082B12C /* Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91D195F2CE27DD60082B12C /* Favourites.swift */; };
@@ -27,6 +28,7 @@
 		7A2B93503A76089E3003ECC6 /* Pods_SwipeAssignment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwipeAssignment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FDD7192C2E5354E76180E22 /* Pods-SwipeAssignment.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeAssignment.release.xcconfig"; path = "Target Support Files/Pods-SwipeAssignment/Pods-SwipeAssignment.release.xcconfig"; sourceTree = "<group>"; };
 		A099B7E649572281B4C4E65F /* Pods-SwipeAssignment.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwipeAssignment.debug.xcconfig"; path = "Target Support Files/Pods-SwipeAssignment/Pods-SwipeAssignment.debug.xcconfig"; sourceTree = "<group>"; };
+		AB341EEA2CE3207800745002 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		D91D19572CE266740082B12C /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		D91D195F2CE27DD60082B12C /* Favourites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favourites.swift; sourceTree = "<group>"; };
 		D9BC39A32CE0A6E800716D1E /* SwipeAssignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwipeAssignment.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +73,14 @@
 				7FDD7192C2E5354E76180E22 /* Pods-SwipeAssignment.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		AB341EE92CE3204E00745002 /* LoadingView */ = {
+			isa = PBXGroup;
+			children = (
+				AB341EEA2CE3207800745002 /* LoadingView.swift */,
+			);
+			path = LoadingView;
 			sourceTree = "<group>";
 		};
 		D91D19562CE263A30082B12C /* AlertView */ = {
@@ -118,6 +128,7 @@
 		D9BC39A52CE0A6E800716D1E /* SwipeAssignment */ = {
 			isa = PBXGroup;
 			children = (
+				AB341EE92CE3204E00745002 /* LoadingView */,
 				D91D195E2CE27DB70082B12C /* Realm DataModel */,
 				D91D19562CE263A30082B12C /* AlertView */,
 				D9BC39BE2CE0C89400716D1E /* PrdListView */,
@@ -275,6 +286,7 @@
 				D9BC39AB2CE0A6E800716D1E /* ViewController.swift in Sources */,
 				D9BC39C72CE0D4FD00716D1E /* ProductAddViewController.swift in Sources */,
 				D9BC39A72CE0A6E800716D1E /* AppDelegate.swift in Sources */,
+				AB341EEB2CE3207800745002 /* LoadingView.swift in Sources */,
 				D9BC39BD2CE0C0A900716D1E /* ProductListTableViewCell.swift in Sources */,
 				D9BC39C02CE0C8CE00716D1E /* ProductListModel.swift in Sources */,
 				D91D19582CE266740082B12C /* AlertView.swift in Sources */,
